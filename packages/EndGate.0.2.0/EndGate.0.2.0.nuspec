@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>EndGate</id>
+    <version>0.2.0</version>
+    <title>EndGate</title>
+    <authors>N. Taylor Mullen</authors>
+    <owners>N. Taylor Mullen</owners>
+    <licenseUrl>https://github.com/NTaylorMullen/EndGate/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://endgate.net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A TypeScript powered gaming framework.</description>
+    <releaseNotes />
+    <copyright>Copyright EndGate 2013</copyright>
+    <language />
+    <tags>EndGate EG Game TypeScript GameFramework End Gate</tags>
+    <references />
+  </metadata>
+</package>

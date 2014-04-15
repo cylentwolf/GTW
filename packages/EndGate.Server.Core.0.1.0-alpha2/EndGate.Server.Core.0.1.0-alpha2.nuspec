@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>EndGate.Server.Core</id>
+    <version>0.1.0-alpha2</version>
+    <title>EndGate.Server.Core</title>
+    <authors>N. Taylor Mullen</authors>
+    <owners>N. Taylor Mullen</owners>
+    <licenseUrl>https://github.com/NTaylorMullen/EndGate.Server/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://endgate.net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Core components to support a C# game server.</description>
+    <copyright>Copyright EndGate 2013</copyright>
+    <tags>EndGate EG Game Server EndGate.Server EG.Server Core EndGate.Server.Core</tags>
+    <references>
+      <reference file="EndGate.Server.Core.dll" />
+    </references>
+  </metadata>
+</package>

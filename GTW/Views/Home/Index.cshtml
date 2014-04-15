@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+               Pre Alpha state at the moment.  Not even sure this will show.
+            </p>
+        </div>
+    </section>
+}
+<div class="mainbg">
+@{ if (this.User.Identity.IsAuthenticated) { 
+    <canvas id="game" width="900" height="500" style="background-image:url('Images/bg.png')"></canvas>
+
+   @*<canvas id="gameview" width="900" height="500" style="background-image:url('Images/bg.png')"></canvas>*@
+     }
+    else
+    {
+    <div>
+        Explore...Exploit...Exterminate...
+    </div>   
+   }
+   }
+</div>
+<ul data-role="listview" data-inset="true">
+    <li data-role="list-divider">Navigation</li>
+    <li>@Html.ActionLink("About", "About", "Home")</li>
+    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+</ul>
+<script src="~/Scripts/jquery-1.8.2.js"></script>
+<script src="~/Scripts/jquery.signalR-2.0.0.js"></script>
+
+
+    <script src="signalr/hubs"></script>
+
+    <script src="Scripts/endgate-0.2.0.js"></script>
+    <script src="Scripts/endgate.multiplayer.chat.js"></script>
+
+    <script src="app.js"></script>

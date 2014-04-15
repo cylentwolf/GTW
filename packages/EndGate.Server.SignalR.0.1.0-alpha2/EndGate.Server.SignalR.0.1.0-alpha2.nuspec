@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>EndGate.Server.SignalR</id>
+    <version>0.1.0-alpha2</version>
+    <title>EndGate.Server.SignalR</title>
+    <authors>N. Taylor Mullen</authors>
+    <owners>N. Taylor Mullen</owners>
+    <licenseUrl>https://github.com/NTaylorMullen/EndGate.Server/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>http://endgate.net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>An EndGate game server powered by SignalR.</description>
+    <releaseNotes />
+    <copyright>Copyright EndGate 2013</copyright>
+    <language />
+    <tags>EndGate EG Game TypeScript GameFramework End Gate</tags>
+    <dependencies>
+      <dependency id="EndGate.Server.Core" version="(, 1.0)" />
+      <dependency id="Microsoft.AspNet.SignalR.SystemWeb" version="[1.0, 3.0)" />
+    </dependencies>
+    <references>
+      <reference file="EndGate.Server.SignalR.dll" />
+    </references>
+  </metadata>
+</package>
