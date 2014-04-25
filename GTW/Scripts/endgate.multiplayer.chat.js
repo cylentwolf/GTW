@@ -10,6 +10,10 @@
                 this.Connection = $.connection.hub;
                 this.Proxy = ($.connection).chat;
 
+                if (!this.Proxy) {
+                    throw "Hub not defined...";
+                }
+
                 var savedProxyInvoke = this.Proxy.invoke;
 
                 this.OnMessageReceived = new eg.EventHandler1();
@@ -99,6 +103,7 @@
                 //drop the chat box in there
                 this._chatContainer = $("<ul>").attr("id", "eg-chat");
                 $("body").append(this._chatContainer);
+                try {
                 var serverAdapter = new ChatAdapter();
 
                 serverAdapter.OnMessageReceived.Bind(function (chat) {
@@ -147,6 +152,10 @@
                             break;
                     }
                 });
+                    
+                } catch (e) {
+                    console.log("Unable to initialize chat:", e);
+                }
             }
             ChatHandler.prototype.StopPropogation = function (key) {
                 key.preventDefault();
@@ -201,6 +210,7 @@
                 }
                 return hash;
             };
+
             return ChatHandler;
         })();
         Multiplayer.ChatHandler = ChatHandler;
