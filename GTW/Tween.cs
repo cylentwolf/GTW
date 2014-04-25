@@ -6,7 +6,9 @@ using System.Web;
 
 namespace GalaxyTradeWars
 {
-    public class Vector2dTweener : IUpdateable
+    using EndGate.Server.MovementControllers;
+
+    public class Vector2dTweener : MovementController
     {
         public Vector2d From { get; private set; }
         public Vector2d To { get; private set; }
@@ -18,7 +20,7 @@ namespace GalaxyTradeWars
         public event EventHandler<Vector2d> OnChange;
         public event EventHandler<Vector2dTweener> OnComplete;
 
-        public Vector2dTweener(Vector2d current, double speed)
+        public Vector2dTweener(Vector2d current, double speed, Player player) : base(new [] { player })
         {
             Speed = speed;
             Current = current;
@@ -33,6 +35,15 @@ namespace GalaxyTradeWars
             this.To = to;
             this.Duration = duration;
             this.Elapsed = TimeSpan.Zero;
+
+            if (!_isPlaying)
+            {
+                this.Play();
+            }
+            else
+            {
+                this.Restart();
+            }
         }
 
         private void Changed(Vector2d vector)
@@ -60,7 +71,7 @@ namespace GalaxyTradeWars
 
             this.Elapsed = this.Elapsed.Add(gameTime.Elapsed);
 
-            if (this.Elapsed.Milliseconds >= this.Duration.Milliseconds)
+            if (this.Elapsed.TotalMilliseconds >= this.Duration.TotalMilliseconds)
             {
                 this.Elapsed = this.Duration;
                 this.Current = this.To.Clone();
@@ -73,6 +84,12 @@ namespace GalaxyTradeWars
             {
                 this.UpdateTween();
                 this.Changed(this.Current.Clone());
+            }
+
+            foreach (var moveable in this.Moveables)
+            {
+                moveable.Position = this.Current.Clone();
+                moveable.Rotation = Rotation;
             }
         }
 
@@ -88,7 +105,7 @@ namespace GalaxyTradeWars
         {
             var change = to - from;
 
-            return change * elapsed.Milliseconds / duration.Milliseconds + from;
+            return change * elapsed.TotalMilliseconds / duration.TotalMilliseconds + from;
         }
 
         public void Play()
