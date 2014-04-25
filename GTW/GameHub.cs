@@ -33,12 +33,12 @@ namespace GalaxyTradeWars
         /// <param name="startMoving">Whether or not the player wants to start moving.</param>
         public void Move(string direction, bool startMoving)
         {
-            game.UserManager[Context.ConnectionId].MovementController.Move(direction, startMoving);
+            //game.UserManager[Context.ConnectionId].MovementController.Move(direction, startMoving);
         }
 
         public void Tween(Vector2d current, Vector2d destination)
         {
-           game.UserManager[Context.ConnectionId].TweenMovementController.MoveTo(current, destination);
+           game.UserManager[Context.ConnectionId].MovementController.MoveTo(current, destination);
         }
 
 

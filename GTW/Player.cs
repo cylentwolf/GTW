@@ -14,10 +14,9 @@ namespace GalaxyTradeWars
             Rotation = 0;
             // Just like the client, we pass in an array of IMoveables, in this case just "us" and our MovementController will move us at 100 pixels per second.
             //MovementController = new LinearMovementController(new IMoveable[] { this }, 100);
-            TweenMovementController = new Vector2dTweener(Position, 30.0);
+            //TweenMovementController = new Vector2dTweener(Position, 30.0);
+            this.MovementController = new Vector2dTweener(Position, 30, this);
         }
-
-        public Vector2dTweener TweenMovementController { get; set; }
 
         /// <summary>
         /// Updated by the MMO game object
@@ -27,10 +26,10 @@ namespace GalaxyTradeWars
         {
             // We update the MovementController so that it can move our player in the desired direction.
             //MovementController.Update(gameTime);
-            TweenMovementController.Update(gameTime);
+            MovementController.Update(gameTime);
         }
 
-        public LinearMovementController MovementController { get; set; }
+        public Vector2dTweener MovementController { get; set; }
 
         public Vector2d Position { get; set; }
 

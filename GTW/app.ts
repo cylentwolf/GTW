@@ -14,6 +14,16 @@ class GTW extends eg.Game {
 
         this._players = {};
 
+
+        var rect = new eg.Graphics.Rectangle(0, 0, 50, 50, eg.Graphics.Color.Red);
+        this.Scene.Add(rect);
+        var rect1 = new eg.Graphics.Rectangle(500, 0, 50, 50, eg.Graphics.Color.Red);
+        this.Scene.Add(rect1);
+        var rect2 = new eg.Graphics.Rectangle(0, 500, 50, 50, eg.Graphics.Color.Red);
+        this.Scene.Add(rect2);
+        var rect3 = new eg.Graphics.Rectangle(500, 500, 50, 50, eg.Graphics.Color.Red);
+        this.Scene.Add(rect3);
+        
         // Use JQuery to retrieve world.txt (a JSON file).
         // Only reason why it's not .json is because I'm lazy and didn't feel like adding the .json mime type.
         //$.getJSON("world.txt").done((json: string) => {
@@ -30,20 +40,20 @@ class GTW extends eg.Game {
         //        }
         //    });
         //});
-        this.Input.Mouse.OnClick.Bind((event: eg.Input.IMouseClickEvent) => {
-            //this._players[this._userId].MovementController.Position = event.Position;
-            //this._targetPosition = event.Position;
-            //proxy.server.move("Left", true);
-            this._players[this._userId].MovementController.Position = event.Position;
-        });
-        // The From and To parameters (first two parameters) are being set to zero because we'll be setting them on mouse click.
-        this._movementTween = new eg.Tweening.Vector2dTween(eg.Vector2d.Zero, eg.Vector2d.Zero, eg.TimeSpan.FromSeconds(1), eg.Tweening.Functions.Linear.EaseNone);
-        // Every time the tween updates its value this event handler is triggered.
-        this._movementTween.OnChange.Bind((newPosition) => {
-            this._players[this._userId].MovementController.Position = newPosition;
+        //this.Input.Mouse.OnClick.Bind((event: eg.Input.IMouseClickEvent) => {
+        //    //this._players[this._userId].MovementController.Position = event.Position;
+        //    //this._targetPosition = event.Position;
+        //    //proxy.server.move("Left", true);
+        //    this._players[this._userId].MovementController.Position = event.Position;
+        //});
+        //// The From and To parameters (first two parameters) are being set to zero because we'll be setting them on mouse click.
+        //this._movementTween = new eg.Tweening.Vector2dTween(eg.Vector2d.Zero, eg.Vector2d.Zero, eg.TimeSpan.FromSeconds(1), eg.Tweening.Functions.Linear.EaseNone);
+        //// Every time the tween updates its value this event handler is triggered.
+        //this._movementTween.OnChange.Bind((newPosition) => {
+        //    this._players[this._userId].MovementController.Position = newPosition;
 
 
-        });
+        //});
        
 
        
@@ -112,7 +122,9 @@ class GTW extends eg.Game {
                     //this._players[this._userId].MovementController.Position = event.Position;
                     ////this._targetPosition = event.Position;
 
-                    proxy.server.tween(this._players[this._userId].Position, event.Position);
+                    console.log(event.Position);
+
+                    proxy.server.tween(this._players[this._userId].Position, event.Position.Subtract(new eg.Vector2d(450, 250)));
 
                     //var direction;
                     //if (this._players[this._userId].MovementController.Position.Y > event.Position.Y)
@@ -139,7 +151,7 @@ class GTW extends eg.Game {
             // Move the scene's camera to be looking directly at me.
             // Note: In EndGate all positions are "center" positioned so simply setting the camera's position to my position centers it directly on me.
             // To learn more check out the camera sample here: XXXXXXXXXXXXX
-            this.Scene.Camera.Position = this._players[this._userId].MovementController.Position;
+            this.Scene.Camera.Position = this._players[this._userId].Position;
         }
     }
 }
@@ -153,7 +165,6 @@ class Player extends eg.Graphics.Sprite2d {
     // Our player uses the LinearMovementController which is great at performing "Linear" movement. AKA moving an object with no acceleration.
     // It supports the following movements: "Left", "Right", "Up", "Down".
     // To learn more check ou the MovementController sample here: XXXXXXXXXXXXXXXXX
-    public MovementController: eg.MovementControllers.LinearMovementController;
     private _movementTween: eg.Tweening.Vector2dTween;
    
     // Our player takes in a server player and then updates its flags to match.
@@ -161,11 +172,20 @@ class Player extends eg.Graphics.Sprite2d {
         // We initially set the Player to be at 0, 0 because we immediately set the position to the server player's position via the LoadPayload method.
         super(0, 0, Player.Graphic);
 
+        this._movementTween = new eg.Tweening.Vector2dTween(eg.Vector2d.Zero, eg.Vector2d.Zero, eg.TimeSpan.FromMilliseconds(30), eg.Tweening.Functions.Linear.EaseNone);
+
+        this._movementTween.OnChange.Bind((result: eg.Vector2d) => {
+            this.Position = result;
+        });
+
+        this._movementTween.OnComplete.Bind((result: eg.Tweening.Vector2dTween): void => {
+            this.Position = result.To;
+            this._movementTween.Stop();
+        });
+
         // Initialize a MovementController with the player as one of the IMoveables that are taken in and set the initial move speed to 100 pixels per second.
         // The reason why the IMoveables is an array is because the MovementController can sync more than one objects position to match its own.
         // You can see a great example of where this is used in the XXXX sample here: XXXXXXXXXXXXXXXXX
-        this.MovementController = new eg.MovementControllers.LinearMovementController(new Array<eg.IMoveable>(this), 100);
-        
         
         // Ensure that our position and our movement controller are up-to-date with the server version of the player.
         this.LoadPayload(serverPlayer);
@@ -173,20 +193,23 @@ class Player extends eg.Graphics.Sprite2d {
 
     // Used to synchronize client and server positions
     public LoadPayload(serverPlayer): void {
-        this.MovementController.Position = new eg.Vector2d(serverPlayer.MovementController.Position.X, serverPlayer.MovementController.Position.Y);
-        this._movementTween.To = new eg.Vector2d(serverPlayer.MovementController.Position.X, serverPlayer.MovementController.Position.Y);
+        //this.MovementController.Position = new eg.Vector2d(serverPlayer.MovementController.Position.X, serverPlayer.MovementController.Position.Y);
+        this._movementTween.From = this.Position;
+        this._movementTween.To = new eg.Vector2d(serverPlayer.Position.X, serverPlayer.Position.Y);
+
+        this._movementTween.Restart();
         // Iterate through each of the serverPlayer's moving flags and synchronize the client players MovementController to match.
-        for (var direction in serverPlayer.MovementController.Moving) {
-            this.MovementController.Move(direction, serverPlayer.MovementController.Moving[direction]);
-        }
+        //for (var direction in serverPlayer.MovementController.Moving) {
+        //    this.MovementController.Move(direction, serverPlayer.MovementController.Moving[direction]);
+        //}
 
     }
 
     // Called from the MMO's Update method
     public Update(gameTime: eg.GameTime): void {
         // We update the MovementController so that it can move our player in the desired direction.
-        this.MovementController.Update(gameTime);
         this._movementTween.Update(gameTime);
+        $("playerinfo").text(this.Position.X + "," + this.Position.Y);
     }
 }
 
